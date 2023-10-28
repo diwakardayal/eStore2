@@ -1,0 +1,26 @@
+{
+	"name": "estore",
+	"version": "1.0.0",
+	"main": "src/app.js",
+	"license": "MIT",
+	"scripts": {
+		"prepare": "husky install",
+		"start": "node src/app.js",
+		"format": "prettier --check",
+		"lint": "eslint \"**/*.js\" --quiet"
+	},
+	"lint-staged": {
+		"*": "npm run format",
+		"**/*.js": "npm run lint"
+	},
+	"devDependencies": {
+		"eslint": "^8.52.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-plugin-import": "^2.29.0",
+		"eslint-plugin-prettier": "^5.0.1",
+		"husky": "^8.0.3",
+		"lint-staged": "^15.0.2",
+		"prettier": "^3.0.3"
+	}
+}
