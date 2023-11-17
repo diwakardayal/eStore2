@@ -1,9 +1,13 @@
 import { useEffect } from "react"
 import { BsCartDashFill } from "react-icons/bs"
 import { BiSolidUser } from "react-icons/bi"
+import { useSelector } from "react-redux"
+import { Badge } from "react-bootstrap"
 import "./Header.css"
 
 export default function Header() {
+	const { cartItems } = useSelector(state => state.cart)
+
 	useEffect(() => {
 		try {
 			const toggleButtons = document.getElementsByClassName("toggle-buttons")[0]
@@ -35,7 +39,13 @@ export default function Header() {
 						style={{ display: "flex", justifyItems: "center", gap: ".4rem" }}
 						className="headerCart"
 					>
-						<BsCartDashFill /> Cart
+						<BsCartDashFill />
+						Cart
+						{cartItems.length > 0 && (
+							<Badge pill bg="success">
+								{cartItems.reduce((a, c) => a + c.quantity, 0)}
+							</Badge>
+						)}
 					</div>
 					<div
 						style={{ display: "flex", justifyItems: "center", gap: ".4rem" }}
