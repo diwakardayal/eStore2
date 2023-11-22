@@ -8,6 +8,8 @@ const routerIndex = require("./routes/routerIndex")
 
 const app = express()
 app.use(cors({ origin: "*" }))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(routerIndex)
 
 app.listen(process.env.PORT || 3000, () => {
