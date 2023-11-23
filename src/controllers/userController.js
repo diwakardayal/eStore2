@@ -1,6 +1,7 @@
-const jwt = require("jsonwebtoken")
+/* eslint-disable no-underscore-dangle */
 const User = require("../db/models/user")
 const asyncHandler = require("../middleware/asyncHandler")
+const generateAndSetJwtCookie = require("../utlis/generateToken")
 /*
     @desc Auth user & get token
     @route GET /api/users/login
@@ -13,21 +14,8 @@ const authUser = asyncHandler(async (req, res) => {
 	const user = await User.findOne({ email })
 	if (user && (await user.matchPassword(password))) {
 		// eslint-disable-next-line no-underscore-dangle
-		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-			expiresIn: "30d",
-		})
-
-		console.log(token)
-
-		// Set JWT as HTTP Only cookie
-		res.cookie("jwt", token, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV !== "development",
-			samesite: "strict",
-			maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
-		})
-
-		res.json({
+		generateAndSetJwtCookie(res, user._id)
+		res.status(200).json({
 			// eslint-disable-next-line no-underscore-dangle
 			_id: user._id,
 			name: user.name,
@@ -47,7 +35,35 @@ const authUser = asyncHandler(async (req, res) => {
 
 */
 const registerUser = async (req, res) => {
-	res.send("register user")
+	const { name, email, password } = req.body
+
+	// Check if user exist
+	const doesUserExist = await User.findOne({ email })
+
+	if (doesUserExist) {
+		res.status(400)
+		throw new Error("User already exists")
+	}
+
+	const user = await User.create({
+		name,
+		email,
+		password,
+	})
+
+	if (user) {
+		generateAndSetJwtCookie(res, user._id)
+
+		res.status(201).json({
+			_id: user._id,
+			name: user.name,
+			email: user.email,
+			isAdmin: user.isAdmin,
+		})
+	} else {
+		res.status(400)
+		throw new Error("Invalid user data")
+	}
 }
 
 /*
@@ -69,7 +85,19 @@ const logoutUser = async (req, res) => {
     @access Public
 */
 const getUserProfile = async (req, res) => {
-	res.send("get user profile")
+	const user = await User.findById(req.user._id)
+
+	if (user) {
+		res.status(200).json({
+			_id: user._id,
+			name: user.name,
+			email: user.email,
+			isAdmin: user.isAdmin,
+		})
+	} else {
+		res.status(404)
+		throw new Error("User not found")
+	}
 }
 
 /*
@@ -78,7 +106,28 @@ const getUserProfile = async (req, res) => {
     @access Private
 */
 const updateUserProfile = async (req, res) => {
-	res.send("update user profile")
+	const user = await User.findById(req.user._id)
+	console.log("??")
+
+	if (user) {
+		user.name = req.body.name || user.name
+		user.email = req.body.email || user.email
+
+		if (req.body.password) {
+			user.password = req.body.password
+		}
+
+		const updatedUser = await user.save()
+		res.status(200).json({
+			_id: updatedUser._id,
+			name: updatedUser.name,
+			email: updatedUser.email,
+			isAdmin: updatedUser.isAdmin,
+		})
+	} else {
+		res.status(404)
+		throw new Error("User not found")
+	}
 }
 
 /*
