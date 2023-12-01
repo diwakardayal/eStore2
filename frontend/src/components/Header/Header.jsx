@@ -1,12 +1,32 @@
+import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import { BsCartDashFill } from "react-icons/bs"
 import { BiSolidUser } from "react-icons/bi"
-import { useSelector } from "react-redux"
-import { Badge } from "react-bootstrap"
+import { useSelector, useDispatch } from "react-redux"
+import { Badge, NavDropdown } from "react-bootstrap"
+import { LinkContainer } from "react-router-bootstrap"
 import "./Header.css"
+import { Link } from "react-router-dom"
+import { useLogoutMutation } from "../../slices/usersApiSlice"
+import { logout } from "../../slices/authSlice"
 
 export default function Header() {
 	const { cartItems } = useSelector(state => state.cart)
+	const { userInfo } = useSelector(state => state.auth)
+
+	const dispatch = useDispatch()
+	const navigate = useNavigate()
+	const [logoutApiCall] = useLogoutMutation()
+
+	const logoutHandler = async () => {
+		try {
+			await logoutApiCall().unwrap()
+			dispatch(logout())
+			navigate("/login")
+		} catch (e) {
+			console.log(e)
+		}
+	}
 
 	useEffect(() => {
 		try {
@@ -36,7 +56,12 @@ export default function Header() {
 						<button className="searchButton">Search</button>
 					</div>
 					<div
-						style={{ display: "flex", justifyItems: "center", gap: ".4rem" }}
+						style={{
+							display: "flex",
+							justifyItems: "center",
+							gap: ".4rem",
+							alignItems: "center",
+						}}
 						className="headerCart"
 					>
 						<BsCartDashFill />
@@ -47,12 +72,28 @@ export default function Header() {
 							</Badge>
 						)}
 					</div>
-					<div
-						style={{ display: "flex", justifyItems: "center", gap: ".4rem" }}
-						className="headerSignIn"
-					>
-						<BiSolidUser /> Sign In
-					</div>
+					{userInfo ? (
+						<NavDropdown title={userInfo.name} id="username">
+							<LinkContainer to="/profile">
+								<NavDropdown.Item>Profile</NavDropdown.Item>
+							</LinkContainer>
+							<NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+						</NavDropdown>
+					) : (
+						<Link to="/login">
+							<div
+								style={{
+									display: "flex",
+									justifyItems: "center",
+									gap: ".4rem",
+									alignItems: "center",
+								}}
+								className="headerSignIn"
+							>
+								<BiSolidUser /> Sign In
+							</div>
+						</Link>
+					)}
 				</div>
 			</nav>
 		</div>
