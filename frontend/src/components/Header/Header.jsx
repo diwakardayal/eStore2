@@ -73,12 +73,27 @@ export default function Header() {
 						)}
 					</div>
 					{userInfo ? (
-						<NavDropdown title={userInfo.name} id="username">
-							<LinkContainer to="/profile">
-								<NavDropdown.Item>Profile</NavDropdown.Item>
-							</LinkContainer>
-							<NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
-						</NavDropdown>
+						<>
+							<NavDropdown title={userInfo.name} id="username">
+								<LinkContainer to="/profile">
+									<NavDropdown.Item>Profile</NavDropdown.Item>
+								</LinkContainer>
+								<NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+							</NavDropdown>
+							{userInfo && userInfo.isAdmin && (
+								<NavDropdown title="Admin" id="adminmenu">
+									<LinkContainer to="/admin/productlist">
+										<NavDropdown.Item>Products</NavDropdown.Item>
+									</LinkContainer>
+									<LinkContainer to="/admin/userlist">
+										<NavDropdown.Item>Users</NavDropdown.Item>
+									</LinkContainer>
+									<LinkContainer to="/admin/orderlist">
+										<NavDropdown.Item>Orders</NavDropdown.Item>
+									</LinkContainer>
+								</NavDropdown>
+							)}
+						</>
 					) : (
 						<Link to="/login">
 							<div

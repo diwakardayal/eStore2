@@ -3,7 +3,13 @@ import { apiSlice } from "./apiSlices"
 export const usersApiSlice = apiSlice.injectEndpoints({
 	endpoints: builder => ({
 		login: builder.mutation({
-			query: data => ({ url: "/api/users/auth", method: "POST", body: data }),
+			query: data => ({
+				url: "/api/users/auth",
+				method: "POST",
+				body: data,
+				headers: { "Content-Type": "application/json" },
+				credentials: "include",
+			}),
 		}),
 		register: builder.mutation({
 			query: data => ({ url: "/api/users", method: "POST", body: data }),
