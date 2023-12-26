@@ -4,10 +4,12 @@ import Product from "../components/Product"
 import Loader from "../components/Loader"
 import Message from "../components/Message"
 import ProductCarousel from "../components/ProductCarousel"
+import { useParams } from "react-router-dom"
 
 export default function HomeScreen() {
+	const { keyword } = useParams()
 	// eslint-disable-next-line no-unused-vars
-	const { data: products, isLoading, error } = useGetProductsQuery()
+	const { data: products, isLoading, error } = useGetProductsQuery(keyword)
 	console.log("error: ", error)
 	console.log("products: ", products)
 	return (

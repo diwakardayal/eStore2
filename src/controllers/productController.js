@@ -6,7 +6,15 @@ const Product = require("../db/models/product")
 // @route GET /api/products
 // @access Public
 const getProducts = asyncHandler(async (req, res) => {
-	res.json(await Product.find())
+	const keyword = req.query.keyword
+		? {
+				name: {
+					$regex: req.query.keyword,
+					$options: "i",
+				},
+		  }
+		: {}
+	res.json(await Product.find({ ...keyword }))
 })
 
 // @desc Fetch single product

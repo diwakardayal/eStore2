@@ -9,6 +9,7 @@ import "./Header.css"
 import { Link } from "react-router-dom"
 import { useLogoutMutation } from "../../slices/usersApiSlice"
 import { logout } from "../../slices/authSlice"
+import SearchBox from "../SearchBox"
 
 export default function Header() {
 	const { cartItems } = useSelector(state => state.cart)
@@ -51,10 +52,7 @@ export default function Header() {
 					<span className="bar"></span>
 				</div>
 				<div className="navlinks">
-					<div style={{ display: "flex", justifyItems: "center", gap: ".4rem" }}>
-						<input className="searchInputBox" placeholder="Search Products..." />
-						<button className="searchButton">Search</button>
-					</div>
+					<SearchBox />
 					<div
 						style={{
 							display: "flex",
