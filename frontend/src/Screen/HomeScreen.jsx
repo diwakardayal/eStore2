@@ -3,6 +3,7 @@ import { Row, Col } from "react-bootstrap"
 import Product from "../components/Product"
 import Loader from "../components/Loader"
 import Message from "../components/Message"
+import ProductCarousel from "../components/ProductCarousel"
 
 export default function HomeScreen() {
 	// eslint-disable-next-line no-unused-vars
@@ -11,6 +12,7 @@ export default function HomeScreen() {
 	console.log("products: ", products)
 	return (
 		<>
+			<ProductCarousel />
 			<h1>Latest Products</h1>
 
 			{isLoading ? (

@@ -11,9 +11,11 @@ const {
 	updateProduct,
 	deleteProduct,
 	createProductReview,
+	getTopProducts,
 } = require("../controllers/productController")
 
 router.route("/").get(getProducts).post(protect, admin, createProduct)
+router.get("/top", getTopProducts)
 router
 	.route("/:id")
 	.get(checkObjectId, getProductById)
@@ -21,4 +23,5 @@ router
 	.delete(protect, admin, deleteProduct)
 
 router.route("/:id/reviews").post(protect, createProductReview)
+
 module.exports = router
