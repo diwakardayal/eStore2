@@ -3,6 +3,7 @@ require("dotenv").config()
 const express = require("express")
 const cors = require("cors")
 const cookieParser = require("cookie-parser")
+const path = require("path")
 
 require("./db/connection")
 const routerIndex = require("./routes/routerIndex")
@@ -14,6 +15,17 @@ app.use(cors({ origin: true, credentials: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(routerIndex)
+
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "..", "/frontend/dist")))
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(path.join(__dirname, "..", "/frontend", "dist", "index.html")))
+	})
+} else {
+	app.get("/", (req, res) => {
+		res.send("API is running...")
+	})
+}
 
 app.use(notFound)
 app.use(errorHandler)

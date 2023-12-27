@@ -45,7 +45,11 @@ export default function Header() {
 	return (
 		<div className="wrapper">
 			<nav>
-				<div className="logo">eStore</div>
+				<div className="logo">
+					<Link to="/" style={{ color: "white", textDecoration: "none" }}>
+						eStore
+					</Link>
+				</div>
 				<div className="toggle-buttons">
 					<span className="bar"></span>
 					<span className="bar"></span>
@@ -63,7 +67,9 @@ export default function Header() {
 						className="headerCart"
 					>
 						<BsCartDashFill />
-						Cart
+						<Link to="/Cart" style={{ color: "white", textDecoration: "none" }}>
+							Cart
+						</Link>
 						{cartItems.length > 0 && (
 							<Badge pill bg="success">
 								{cartItems.reduce((a, c) => a + c.quantity, 0)}
