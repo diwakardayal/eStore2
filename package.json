@@ -3,12 +3,15 @@
 	"version": "1.0.0",
 	"main": "src/app.js",
 	"license": "MIT",
+	"engines": {
+		"npm": "9.6.7",
+		"node": ">=18.0.0"
+	},
 	"scripts": {
-		"prepare": "husky install",
 		"start": "node src/app.js",
 		"format": "prettier --check",
 		"lint": "eslint \"**/*.js\" --quiet",
-		"build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+		"build": "npx husky install && npm install && cd frontend && npm install && npm run build"
 	},
 	"lint-staged": {
 		"*": "npm run format",
